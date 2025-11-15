@@ -1,0 +1,42 @@
+import axios from "axios";
+
+const BASE_URL = import.meta.env.VITE_BASE_URL;
+
+const api = axios.create({
+  baseURL: BASE_URL,
+  withCredentials: true, // include cookies
+});
+
+// ------------------------
+// Generic request handler
+// ------------------------
+const handleRequest = async (requestFn, errorMessage) => {
+  try {
+    const response = await requestFn();
+    return response.data;
+  } catch (error) {
+    console.error(`${errorMessage}:`, error.response?.data || error.message);
+    throw error;
+  }
+};
+
+// ------------------------
+// AUTH
+// ------------------------
+export const login = (email, password) =>
+  handleRequest(
+    () => api.post("/auth/login", { email, password }),
+    "Login failed"
+  );
+
+export const register = (name, email, password) =>
+  handleRequest(
+    () => api.post("/auth/register", { name, email, password }),
+    "Registration failed"
+  );
+
+export const logout = () =>
+  handleRequest(() => api.post("/auth/logout"), "Logout failed");
+
+export const getCurrentUser = () =>
+  handleRequest(() => api.get("/auth/me"), "Fetching current user failed");

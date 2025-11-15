@@ -2,24 +2,33 @@ import Rental from "../models/rental.js";
 import Car from "../models/Car.js";
 import User from "../models/User.js";
 
-// Create a new rental
-export const createRental = async (req, res, next) => {
+
+// Create rental
+export const createRental = async (req, res) => {
   try {
     const { user, car, startDate, endDate } = req.body;
 
-    const carExists = await Car.findById(car);
-    if (!carExists) return res.status(404).json({ message: "Car not found" });
+    // Find the selected car
+    const selectedCar = await Car.findById(car);
+    if (!selectedCar) {
+      return res.status(404).json({ msg: "Car not found" });
+    }
 
-    const userExists = await User.findById(user);
-    if (!userExists) return res.status(404).json({ message: "User not found" });
+    // Calculate days
+    const start = new Date(startDate);
+    const end = new Date(endDate);
+    const diffTime = end - start;
 
-    // Calculate total price automatically
-    const days =
-      (new Date(endDate).getTime() - new Date(startDate).getTime()) /
-      (1000 * 60 * 60 * 24);
+    if (isNaN(diffTime) || diffTime <= 0) {
+      return res.status(400).json({ msg: "Invalid rental dates" });
+    }
 
-    const totalPrice = days * carExists.dailyPrice;
+    const days = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
 
+    // Calculate price
+    const totalPrice = days * selectedCar.pricePerDay;
+
+    // Create Rental
     const rental = await Rental.create({
       user,
       car,
@@ -28,11 +37,12 @@ export const createRental = async (req, res, next) => {
       totalPrice,
     });
 
-    res.status(201).json(rental);
+    res.status(201).json({ msg: "Rental created successfully", rental });
   } catch (error) {
-    next(error);
+    res.status(500).json({ message: error.message });
   }
 };
+
 
 // Get all rentals
 export const getAllRentals = async (req, res, next) => {
