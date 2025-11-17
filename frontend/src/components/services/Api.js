@@ -6,7 +6,6 @@ const api = axios.create({
   baseURL: BASE_URL,
   withCredentials: true, // include cookies
 });
-
 // ------------------------
 // Generic request handler
 // ------------------------

@@ -18,16 +18,16 @@ const LoginForm = () => {
     setError("");
 
     try {
-      // 1️⃣ Call API login function
+      // 1 Call API login function
       await login(email, password);
 
-      // 2️⃣ Get current logged-in user
+      // 2 Get current logged-in user
       const user = await getCurrentUser();
 
-      // 3️⃣ Save user in localStorage or context if needed
+      // 3 Save user in localStorage or context if needed
       localStorage.setItem("user", JSON.stringify(user));
 
-      // 4️⃣ Redirect to dashboard
+      // 4 Redirect to dashboard
       navigate("/dashboard");
     } catch (err) {
       setError(err.response?.data?.msg || err.message || "Login failed. Please check your credentials.");
