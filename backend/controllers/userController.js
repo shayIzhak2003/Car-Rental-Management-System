@@ -13,6 +13,25 @@ export const getUser = async (req, res) => {
   res.json(user);
 };
 
+//* update user theme
+export const updateUserTheme = async (req, res) => {
+  try{
+    const user = await User.findById(req.user._id);
+    if (!user) return res.status(404).json({ msg: "User not found" });
+      if(req.body.DarkMode === undefined 
+       || req.body.DarkMode === null ||
+        typeof req.body.DarkMode !== 'boolean'
+      ){
+      return res.status(400).json({ msg: "No theme provided" });  
+    }
+    user.DarkMode = req.body.DarkMode;
+  
+    await user.save();
+    res.json({ msg: "Theme updated", DarkMode: user.DarkMode });
+  }catch(err){
+    res.status(500).json({ msg: "Server error" });
+  }
+};
 
 //* Update user (admin)
 export const updateUser = async (req, res) => {
