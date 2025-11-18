@@ -39,3 +39,18 @@ export const logout = () =>
 
 export const getCurrentUser = () =>
   handleRequest(() => api.get("/auth/me"), "Fetching current user failed");
+
+// api.js
+export const updateTheme = (darkMode) =>
+  handleRequest(
+    () => api.put("/users/updateTheme", { DarkMode: darkMode }), 
+    "Updating theme failed"
+  );
+
+// ------------------------
+// USER MANAGEMENT (ADMIN)
+// ------------------------
+
+// Get all users
+export const getAllUsers = () =>
+  handleRequest(() => api.get("/users/getAllUsers"), "Fetching users failed");

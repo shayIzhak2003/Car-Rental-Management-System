@@ -13,22 +13,30 @@ export const getUser = async (req, res) => {
   res.json(user);
 };
 
-//* update user theme
+//* Update user theme (DarkMode: true/false)
 export const updateUserTheme = async (req, res) => {
-  try{
-    const user = await User.findById(req.user._id);
+  try {
+    // Ensure the user is authenticated
+    const userId = req.user?._id;
+    if (!userId) return res.status(401).json({ msg: "Unauthorized" });
+
+    // Find the user
+    const user = await User.findById(userId);
     if (!user) return res.status(404).json({ msg: "User not found" });
-      if(req.body.DarkMode === undefined 
-       || req.body.DarkMode === null ||
-        typeof req.body.DarkMode !== 'boolean'
-      ){
-      return res.status(400).json({ msg: "No theme provided" });  
+
+    // Validate request body
+    const { DarkMode } = req.body;
+    if (typeof DarkMode !== "boolean") {
+      return res.status(400).json({ msg: "Invalid or missing 'DarkMode' value" });
     }
-    user.DarkMode = req.body.DarkMode;
-  
+
+    // Update and save theme
+    user.DarkMode = DarkMode;
     await user.save();
-    res.json({ msg: "Theme updated", DarkMode: user.DarkMode });
-  }catch(err){
+
+    res.status(200).json({ msg: "Theme updated successfully", DarkMode: user.DarkMode });
+  } catch (err) {
+    console.error("Error updating theme:", err);
     res.status(500).json({ msg: "Server error" });
   }
 };
@@ -62,3 +70,32 @@ export const deleteUser = async (req, res) => {
   }
 };
 
+//* Get all users count admin/users (admin)
+export const getUserCount = async (req, res) => {
+  try{
+    const count = await User.countDocuments();
+    res.json({ count });
+  }catch(err){
+    res.status(500).json({ msg: "Server error" });
+  }
+};
+
+//* Get admin count (admin)
+export const getAdminCount = async (req, res) => {
+  try{
+    const count = await User.countDocuments({ role: "admin" });
+    res.json({ count });
+  }catch(err){
+    res.status(500).json({ msg: "Server error" });
+  }
+};
+
+//* Get regular users count (admin)
+export const getRegularUserCount = async (req, res) => {
+  try{
+    const count = await User.countDocuments({ role: "user" });
+    res.json({ count });
+  }catch(err){
+    res.status(500).json({ msg: "Server error" });
+  }
+};
