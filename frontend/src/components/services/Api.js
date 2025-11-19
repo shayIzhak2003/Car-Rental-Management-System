@@ -54,3 +54,15 @@ export const updateTheme = (darkMode) =>
 // Get all users
 export const getAllUsers = () =>
   handleRequest(() => api.get("/users/getAllUsers"), "Fetching users failed");
+
+// Get user by ID
+export const getUserById = (id) =>
+  handleRequest(() => api.get(`/users/getUserById/${id}`), "Fetching user failed");
+
+// get admin count
+export const getAdminCount = () =>
+  handleRequest(() => api.get("/users/getAdminCount"), "Fetching admin count failed");
+
+// get regular user count
+export const getRegularUserCount = () =>
+  handleRequest(() => api.get("/users/getRegularUserCount"), "Fetching regular user count failed");

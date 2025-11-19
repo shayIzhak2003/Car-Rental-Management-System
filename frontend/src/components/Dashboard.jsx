@@ -1,5 +1,6 @@
-import UsersChart from "./charts/UsersChart";
+import UsersCountChart from "./charts/UsersCountChart";
 import Header from "./Header";
+import ActiveRentalsTable from "./pages/admin/RentalsTable";
 
 const Dashboard = () => {
   const user = JSON.parse(localStorage.getItem("user"));
@@ -9,7 +10,8 @@ const Dashboard = () => {
         <Header/>
       <h1 className="text-3xl font-bold">Welcome, {user?.name || "User"}!</h1>
       <p className="mt-4">This is your dashboard.</p>
-      <UsersChart/>
+      <UsersCountChart/>
+      <ActiveRentalsTable/>
     </div>
   );
 };
