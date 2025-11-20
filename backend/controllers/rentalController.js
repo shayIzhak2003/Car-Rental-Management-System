@@ -57,6 +57,35 @@ export const getAllRentals = async (req, res, next) => {
   }
 };
 
+// update rental by id
+export const updateRentalById = async (req, res) => {
+  try {
+    const rentalId = req.params.id;
+    const updateData = req.body; // update EVERYTHING sent from frontend
+
+    const updatedRental = await Rental.findByIdAndUpdate(
+      rentalId,
+      updateData,
+      { new: true, runValidators: true }
+    )
+      .populate("user", "name email")
+      .populate("car", "brand model");
+
+    if (!updatedRental) {
+      return res.status(404).json({ msg: "Rental not found" });
+    }
+
+    res.json({
+      msg: "Rental updated successfully",
+      updatedRental,
+    });
+  } catch (err) {
+    console.error("Update rental error:", err);
+    res.status(500).json({ msg: "Server error" });
+  }
+};
+
+
 // Get rental by ID
 export const getRentalById = async (req, res, next) => {
   try {

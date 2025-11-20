@@ -22,3 +22,10 @@ const handleRequest = async (requestFn, errorMessage) => {
 //* get all rentals 
 export const getActiveRentals = () =>
   handleRequest(() => api.get("/rentals/getAllRentals"), "Fetching rentals failed");
+
+//* update renatal status
+export const updateRental = (rentalId, updateData) =>
+  handleRequest(
+    () => api.patch(`/rentals/updateRental/${rentalId}`, updateData),
+    "Updating rental failed"
+  );

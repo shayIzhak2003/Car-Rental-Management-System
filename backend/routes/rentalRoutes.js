@@ -5,6 +5,7 @@ import {
   getRentalById,
   updateRentalStatus,
   deleteRental,
+  updateRentalById,
 } from "../controllers/rentalController.js";
 import { protect, admin } from "../middleware/authMiddleware.js";
 
@@ -25,5 +26,8 @@ router.patch("/getRentalStatus/:id/status", updateRentalStatus, protect, admin);
 
 //* Delete rental
 router.delete("/deleteRental/:id", deleteRental, protect, admin);
+
+//* update rental by id
+router.patch("/updateRental/:id", updateRentalById, protect, admin);
 
 export default router;
